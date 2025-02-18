@@ -1,4 +1,4 @@
-import requests, json, yaml, logging.config, pytz
+import requests, json, yaml, logging.config, pytz, os
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
@@ -60,10 +60,15 @@ def main():
     
     data_cisa = ambil_data_cisa(config)
     tanggal_api = ubah_ke_epoch(data_cisa["dateReleased"])
-    
-    with open('dateReleased.txt', 'r') as file:
-        tanggal_file = ubah_ke_epoch(file.read().strip())
-    
+    if not os.path.exists('dateReleased.txt'):
+        # Jika tidak ada, buat file baru dengan tanggal 0
+        with open('dateReleased.txt', 'w') as file:
+            file.write('1970-01-01T00:00:00.000Z')
+        tanggal_file = 0
+    else:
+        # Jika ada, baca seperti biasa
+        with open('dateReleased.txt', 'r') as file:
+            tanggal_file = ubah_ke_epoch(file.read().strip())
     if tanggal_api > tanggal_file:
         logger.info("Data baru ditemukan, mulai update Elasticsearch...")
         
