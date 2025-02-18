@@ -1,0 +1,31 @@
+version: 1
+formatters:
+  simple:
+    format: '%(asctime)s - %(levelname)s - %(message)s'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple
+    stream: ext://sys.stdout
+  file:
+    class: logging.FileHandler
+    level: INFO
+    formatter: simple
+    filename: ./update.log
+loggers:
+  update_logger:
+    level: INFO
+    handlers: [console, file]
+    propagate: no
+root:
+  level: INFO
+  handlers: [console]
+
+# Konfigurasi aplikasi
+app_config:
+  cisa_url: "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+  elasticsearch:
+    host: "https://10.12.20.213:9200"
+    username: "admin"
+    password: "admin123"
